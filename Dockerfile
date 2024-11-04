@@ -1,7 +1,7 @@
-# Dockerfile
-FROM golang:1.21-alpine
+FROM golang:1.23-alpine
 
-WORKDIR /app
+WORKDIR /go/src/github.com/yuuki0310/reservation_api
+
 
 COPY go.mod ./
 COPY go.sum ./
@@ -9,8 +9,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN go install github.com/cosmtrek/air@v1.27.3
 
-EXPOSE 8080
-
-CMD ["./main"]
+CMD ["air"]

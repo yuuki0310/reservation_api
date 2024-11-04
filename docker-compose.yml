@@ -6,7 +6,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./app:/usr/src/app 
+      - .:/go/src/github.com/yuuki0310/reservation_api
+    working_dir: /go/src/github.com/yuuki0310/reservation_api
     depends_on:
       - mysql
     environment:

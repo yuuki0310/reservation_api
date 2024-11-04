@@ -1,8 +1,6 @@
 module github.com/yuuki0310/reservation_api
 
-go 1.21.0
-
-toolchain go1.22.2
+go 1.23
 
 require (
 	github.com/gin-gonic/gin v1.10.0
