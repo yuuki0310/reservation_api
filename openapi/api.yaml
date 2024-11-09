@@ -3,6 +3,10 @@ info:
   title: Reservation API
   description: 店とユーザーの予約状況を確認するAPI
   version: 1.0.0
+  
+servers:
+  - url: 'http://lovcalohost:8080'
+    description: local
 
 paths:
   /stores/{storeId}/reservations:
@@ -34,31 +38,64 @@ paths:
           description: 予約を確認したい月（1～12の範囲）
       responses:
         '200':
-          description: 指定した店舗と月の予約一覧を返します
+          description: 成功時のレスポンス
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    reservationId:
-                      type: string
-                      format: uuid
-                      example: "123e4567-e89b-12d3-a456-426614174000"
-                    from:
-                      type: string
-                      format: date-time
-                      example: "2024-11-05T14:30:00Z"
-                    to:
-                      type: string
-                      format: date-time
-                      example: "2024-11-05T15:30:00Z"
-                    status:
-                      type: string
-                      enum: [full, empty]
-                      example: "full"
-
+                type: object
+                properties:
+                  storeId:
+                    type: string
+                    description: 店舗のID
+                    example: "12345"
+                  year:
+                    type: integer
+                    description: 予約確認の対象年
+                    example: 2024
+                  month:
+                    type: integer
+                    description: 予約確認の対象月
+                    example: 11
+                  reservations:
+                    type: array
+                    description: 月の全日分の予約情報を含む配列
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                          description: 予約日
+                          example: "2024-11-01"
+                        weekday:
+                          type: integer
+                          description: 日曜日を0とした曜日の数字
+                          example: 5
+                        isHoliday:
+                          type: boolean
+                          description: 祝日かどうか
+                          example: false
+                        slots:
+                          type: array
+                          description: 当日の予約スロット情報
+                          items:
+                            type: object
+                            properties:
+                              from:
+                                type: string
+                                format: time
+                                description: 予約開始時間
+                                example: "15:00"
+                              to:
+                                type: string
+                                format: time
+                                description: 予約終了時間
+                                example: "16:00"
+                              status:
+                                type: string
+                                description: 予約ステータス（予約可能、予約済みなど）
+                                enum: ["available", "booked"]
+                                example: "available"
         '404':
           description: 店舗が見つからないか、指定された月の予約が存在しない場合
           content:
@@ -84,6 +121,9 @@ paths:
                 uuid:
                   type: string
                   example: "550e8400-e29b-41d4-a716-446655440000"
+                store_id:
+                  type: integer
+                  example: 1
                 from:
                   type: string
                   format: date-time
@@ -107,10 +147,6 @@ paths:
                   message:
                     type: string
                     example: "Reservation created successfully"
-                  reservationId:
-                    type: string
-                    format: uuid
-                    example: "123e4567-e89b-12d3-a456-426614174000"
         '400':
           description: リクエストのバリデーションエラー
           content:
@@ -143,22 +179,20 @@ paths:
                 items:
                   type: object
                   properties:
-                    reservationId:
-                      type: string
-                      format: uuid
-                      example: "678e4567-e89b-12d3-a456-426614174000"
                     storeId:
+                      type: integer
+                      example: 1
+                    date:
                       type: string
-                      example: "1"
+                      example: "2024/11/05(火)"
                     from:
                       type: string
                       format: date-time
-                      example: "2024-11-05T14:30:00Z"
+                      example: "15:00"
                     to:
                       type: string
                       format: date-time
-                      example: "2024-11-05T15:30:00Z"
-
+                      example: "16:00"
         '404':
           description: 指定したユーザーの予約が見つからない場合
           content:
