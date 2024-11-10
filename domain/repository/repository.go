@@ -6,6 +6,7 @@ import (
 
 type ReservationRepository interface {
     GetReservationsByUserID(uint) ([]*model.Reservation, error)
+	CreateReservation(*model.Reservation) error
 }
 
 type UserRepository interface {

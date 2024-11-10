@@ -15,6 +15,18 @@ func NewReservationRepository() repository.ReservationRepository {
 	return &reservationRepository{db: mysql.DB}
 }
 
+func (r *reservationRepository) GetAllReservations() ([]model.Reservation, error) {
+    var reservations []model.Reservation
+    if err := r.db.Find(&reservations).Error; err != nil {
+        return nil, err
+    }
+    return reservations, nil
+}
+
+func (r *reservationRepository) CreateReservation(reservation *model.Reservation) error {
+    return r.db.Create(reservation).Error
+}
+
 func (r *reservationRepository)GetReservationsByUserID(userID uint) ([]*model.Reservation, error) {
 	var reservations []*model.Reservation
 	if err := r.db.Where("user_id = ?", userID).Find(&reservations).Error; err != nil {
