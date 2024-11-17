@@ -66,7 +66,7 @@ paths:
                           type: string
                           format: date
                           description: 予約日
-                          example: "2024-11-01"
+                          example: "2024-11-01T00:00:00+09:00"
                         weekday:
                           type: integer
                           description: 日曜日を0とした曜日の数字
@@ -85,12 +85,12 @@ paths:
                                 type: string
                                 format: time
                                 description: 予約開始時間
-                                example: "15:00"
+                                example: "2024-11-01T16:00:00+09:00"
                               to:
                                 type: string
                                 format: time
                                 description: 予約終了時間
-                                example: "16:00"
+                                example: "2024-11-01T17:45:00+09:00"
                               status:
                                 type: string
                                 description: 予約ステータス（予約可能、予約済みなど）
@@ -169,6 +169,7 @@ paths:
           schema:
             type: string
           description: 確認するユーザーのUUID
+          example: 550e8400-e29b-41d4-a716-446655440000
       responses:
         '200':
           description: 指定したユーザーの予約一覧を返します

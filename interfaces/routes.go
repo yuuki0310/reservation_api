@@ -10,7 +10,10 @@ func DefineRoutes(r gin.IRouter) {
 		v1.GET("/", test)
 	}
 	{
-		 v1.POST("/reservations", createReservation)
+		v1.GET("/stores/:storeId/reservations", storeReservations)
+	}
+	{
+		v1.POST("/reservations", createReservations)
 		v1.GET("/users/:uuid/reservations", userReservations)
 	}
 }
