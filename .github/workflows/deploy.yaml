@@ -1,0 +1,44 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64
+          provenance: false
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/sauna-api:latest
+          cache-from: type=gha,scope=sauna-api
+          cache-to: type=gha,mode=max,scope=sauna-api
+      - run: bun install
+      - run: bun sls deploy --verbose
+        env:
+          STAGE: ${{ vars.STAGE }}
+          AWS_ACCESS_KEY_ID: ${{ secrets[github.ref == 'refs/heads/main' && 'AWS_ACCESS_KEY_ID' || 'DEV_AWS_ACCESS_KEY_ID'] }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets[github.ref == 'refs/heads/main' && 'AWS_SECRET_ACCESS_KEY' || 'DEV_AWS_SECRET_ACCESS_KEY'] }}

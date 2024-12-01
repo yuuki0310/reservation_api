@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build: .local
     ports:
       - "8080:8080"
     volumes:
@@ -16,6 +16,7 @@ services:
       DB_USER: root
       DB_PASSWORD: password
       DB_NAME: reservation_db
+      ENV: local
     networks:
       - app-network
 
