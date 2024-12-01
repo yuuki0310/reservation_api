@@ -2,7 +2,7 @@
   "devDependencies": {
     "@serverless/typescript": "^3.38.0",
     "@types/node": "^22.9.3",
-    "serverless": "^4.4.11",
+    "serverless": "^3.0.0",
     "serverless-offline": "^14.3.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
