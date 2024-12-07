@@ -9,7 +9,17 @@ const serverlessConfiguration: AWS = {
     region: "ap-northeast-1", // リージョン
     architecture: "arm64", // Lambda関数のアーキテクチャ
     environment: {
-      STAGE: '${opt:stage, "dev"}', // 環境変数
+      ENV: '${opt:dev, "dev"}', // 環境変数
+    },
+    vpc: {
+      securityGroupIds: [
+        "sg-0962d6ce4b1084ea8", // Lambda用のセキュリティグループID
+      ],
+      subnetIds: [
+        "subnet-001bc4194590626c5",
+        "subnet-08b270ac475e57943",
+        "subnet-0f42728727be4389f",
+      ],
     },
   },
   custom: {

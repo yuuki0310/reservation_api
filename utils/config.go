@@ -24,13 +24,13 @@ func newConf() conf {
 
 	switch env {
 	case "local":
-		confPath += "conf.local.toml"
+		confPath += "local.toml"
 	case "dev":
-		confPath += "conf.dev.toml"
+		confPath += "dev.toml"
 	case "prod":
-		confPath += "conf.prod.toml"
+		confPath += "prod.toml"
 	default:
-		confPath += "conf.local.toml"
+		confPath += "local.toml"
 		log.Println("ENV is invalid or ENV is not set. Defaulting to local configuration.")
 	}
 	log.Printf("Load configuration env=%s conf=%s", env, confPath)
