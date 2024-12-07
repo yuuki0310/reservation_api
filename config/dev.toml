@@ -1,0 +1,2 @@
+[db]
+dsn="api_user:q6fYejEC@tcp( sauna-db.c540ug2ywk47.ap-northeast-1.rds.amazonaws.com:3306)/sauna?charset=utf8mb4&parseTime=True&loc=Local"

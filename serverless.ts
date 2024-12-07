@@ -52,8 +52,3 @@ const serverlessConfiguration: AWS = {
 };
 
 module.exports = serverlessConfiguration;
-// aws ecr describe-images \
-//     --repository-name sauna-api \
-//     --profile private \
-//     --image-ids imageDigest=sha256:81daaeb84084a4031b1325485fe912b47701fff5097ace274ea3a0fa9aa09b3f \
-//     --region ap-northeast-1

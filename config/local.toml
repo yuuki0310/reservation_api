@@ -1,0 +1,2 @@
+[db]
+dsn="root:password@tcp(mysql:3306)/sauna?charset=utf8mb4&parseTime=True&loc=Local"
