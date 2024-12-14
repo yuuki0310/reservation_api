@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -31,6 +32,11 @@ func init() {
 
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	// If no name is provided in the HTTP request body, throw an error
+	// Path をログに出力
+	fmt.Printf("Received Path: %s\n", req.Path)
+
+	// リクエスト全体の確認（デバッグ用）
+	fmt.Printf("Full Request: %+v\n", req)
 	return ginLambda.ProxyWithContext(ctx, req)
 }
 
