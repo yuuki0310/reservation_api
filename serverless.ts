@@ -33,7 +33,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/",
+            path: "/test",
             method: "get",
           },
         },
