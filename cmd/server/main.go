@@ -15,7 +15,7 @@ import (
 	"github.com/yuuki0310/reservation_api/utils"
 )
 
-var ginLambda *ginadapter.GinLambda
+var ginLambda *ginadapter.GinLambdaV2
 
 func init() {
 	log.Printf("Gin cold start")
@@ -27,15 +27,10 @@ func init() {
 	r := gin.Default()
 	interfaces.DefineRoutes(r)
 
-	ginLambda = ginadapter.New(r)
+	ginLambda = ginadapter.NewV2(r)
 }
 
-func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// If no name is provided in the HTTP request body, throw an error
-	// Path をログに出力
-	fmt.Printf("Received Path: %s\n", req.Path)
-
-	// リクエスト全体の確認（デバッグ用）
+func Handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	fmt.Printf("Full Request: %+v\n", req)
 	return ginLambda.ProxyWithContext(ctx, req)
 }
