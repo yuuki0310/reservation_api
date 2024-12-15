@@ -7,6 +7,8 @@ info:
 servers:
   - url: 'http://localhost:8080'
     description: local
+  - url: 'https://1bmxqtjdfk.execute-api.ap-northeast-1.amazonaws.com/'
+    description: develop
 
 paths:
   /stores/{storeId}/reservations:
@@ -120,7 +122,7 @@ paths:
               properties:
                 uuid:
                   type: string
-                  example: "550e8400-e29b-41d4-a716-446655440000"
+                  example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
                 store_id:
                   type: integer
                   example: 1
@@ -169,7 +171,7 @@ paths:
           schema:
             type: string
           description: 確認するユーザーのUUID
-          example: 550e8400-e29b-41d4-a716-446655440000
+          example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
       responses:
         '200':
           description: 指定したユーザーの予約一覧を返します

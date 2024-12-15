@@ -42,7 +42,6 @@ const serverlessConfiguration: AWS = {
           httpApi: {
             path: "/",
             method: "get",
-            cors: true,
           },
         },
         {
