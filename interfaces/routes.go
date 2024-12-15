@@ -7,7 +7,7 @@ import (
 func DefineRoutes(r gin.IRouter) {
 	v1 := r.Group("/")
 	{
-		v1.GET("/test", test)
+		v1.GET("/", test)
 	}
 	{
 		v1.GET("/stores/:storeId/reservations", storeReservations)

@@ -21,6 +21,13 @@ const serverlessConfiguration: AWS = {
         "subnet-0f42728727be4389f",
       ],
     },
+    httpApi: {
+      cors: {
+        allowedOrigins: ["*"], // すべてのオリジンを許可
+        allowedHeaders: ["Content-Type", "Authorization"], // 許可するヘッダー
+        allowedMethods: ["GET", "POST", "OPTIONS"], // 許可するメソッド
+      },
+    },
   },
   custom: {
     region: "${opt:region, 'ap-northeast-1'}",
@@ -33,8 +40,9 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/test",
+            path: "/",
             method: "get",
+            cors: true,
           },
         },
         {
