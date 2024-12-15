@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>予約システム</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <h1>予約管理システム</h1>
+    <div>
+      <h2>店舗の予約状況</h2>
+      <form @submit.prevent="getStoreReservations">
+        <label>
+          店舗ID:
+          <input v-model="storeId" type="text" placeholder="例: 12345">
+        </label>
+        <label>
+          年:
+          <input v-model.number="year" type="number" placeholder="例: 2024">
+        </label>
+        <label>
+          月:
+          <input v-model.number="month" type="number" placeholder="例: 11">
+        </label>
+        <button type="submit">検索</button>
+      </form>
+      <div v-if="storeReservations">
+        <h3>{{ storeReservations.storeId }} の予約状況 ({{ storeReservations.year }}年 {{ storeReservations.month }}月)</h3>
+        <ul>
+          <li v-for="reservation in storeReservations.reservations" :key="reservation.date">
+            日付: {{ reservation.date }} (曜日: {{ reservation.weekday }})
+            <ul>
+              <li v-for="slot in reservation.slots" :key="slot.from">
+                時間: {{ slot.from }} - {{ slot.to }} (ステータス: {{ slot.status }})
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h2>ユーザーの予約状況</h2>
+      <form @submit.prevent="getUserReservations">
+        <label>
+          ユーザーUUID:
+          <input v-model="userUuid" type="text" placeholder="例: 550e8400-e29b-41d4-a716-446655440000">
+        </label>
+        <button type="submit">検索</button>
+      </form>
+      <div v-if="userReservations">
+        <h3>ユーザーの予約一覧</h3>
+        <ul>
+          <li v-for="reservation in userReservations" :key="reservation.date">
+            店舗ID: {{ reservation.storeId }} 日付: {{ reservation.date }}
+            時間: {{ reservation.from }} - {{ reservation.to }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h2>新しい予約を作成</h2>
+      <form @submit.prevent="createReservation">
+        <label>
+          ユーザーUUID:
+          <input v-model="newReservation.uuid" type="text">
+        </label>
+        <label>
+          店舗ID:
+          <input v-model.number="newReservation.store_id" type="number">
+        </label>
+        <label>
+          日付:
+          <input v-model="newReservation.date" type="date">
+        </label>
+        <label>
+          時間枠:
+          <select v-model="newReservation.timeSlot">
+            <option v-for="slot in availableTimeSlots" :value="slot" :key="slot.from">
+              {{ slot.from }} ～ {{ slot.to }}
+            </option>
+          </select>
+        </label>
+        <button type="submit">予約を作成</button>
+      </form>
+      <div v-if="reservationMessage">{{ reservationMessage }}</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
