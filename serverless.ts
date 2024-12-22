@@ -27,6 +27,15 @@ const serverlessConfiguration: AWS = {
         allowedHeaders: ["Content-Type", "Authorization"], // 許可するヘッダー
         allowedMethods: ["GET", "POST", "OPTIONS"], // 許可するメソッド
       },
+      authorizers: {
+        cognitoJwtAuthorizer: {
+          type: "jwt",
+          identitySource: "$request.header.Authorization",
+          issuerUrl:
+            "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_ZigqohuSQ",
+          audience: ["qtnut91bg07iuq16ib6b2mljc"],
+        },
+      },
     },
   },
   custom: {
@@ -54,12 +63,18 @@ const serverlessConfiguration: AWS = {
           httpApi: {
             path: "/users/{uuid}/reservations",
             method: "post",
+            authorizer: {
+              name: "cognitoJwtAuthorizer",
+            },
           },
         },
         {
           httpApi: {
             path: "/users/{uuid}/reservations",
             method: "get",
+            authorizer: {
+              name: "cognitoJwtAuthorizer",
+            },
           },
         },
       ],

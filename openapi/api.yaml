@@ -7,8 +7,15 @@ info:
 servers:
   - url: 'http://localhost:8080'
     description: local
-  - url: 'https://1bmxqtjdfk.execute-api.ap-northeast-1.amazonaws.com/'
+  - url: 'https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com/'
     description: develop
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
 paths:
   /stores/{storeId}/reservations:
@@ -174,8 +181,10 @@ paths:
           required: true
           schema:
             type: string
-          description: 確認するユーザーのUUID
+          description: 確認するユーザーのUUID。
           example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: 指定したユーザーの予約一覧を返します
