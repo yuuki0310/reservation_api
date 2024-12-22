@@ -1,7 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
-  service: "sauna-api", // サービス名
+  service: "reservation-api", // サービス名
   frameworkVersion: "3",
   provider: {
     name: "aws",
@@ -35,7 +35,7 @@ const serverlessConfiguration: AWS = {
   functions: {
     api: {
       image: {
-        uri: "${aws:accountId}.dkr.ecr.${self:custom.region}.amazonaws.com/sauna-api:latest",
+        uri: "${aws:accountId}.dkr.ecr.${self:custom.region}.amazonaws.com/reservation-api:latest",
       },
       events: [
         {
@@ -52,7 +52,7 @@ const serverlessConfiguration: AWS = {
         },
         {
           httpApi: {
-            path: "/reservations",
+            path: "/users/{uuid}/reservations",
             method: "post",
           },
         },

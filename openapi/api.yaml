@@ -109,10 +109,18 @@ paths:
                     type: string
                     example: "No reservations found for this store in the specified month"
 
-  /reservations:
+  /users/{uuid}/reservations:
     post:
       summary: 予約の作成
       description: 新しい予約を作成します
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+          description: 確認するユーザーのUUID
+          example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
       requestBody:
         required: true
         content:
@@ -120,9 +128,6 @@ paths:
             schema:
               type: object
               properties:
-                uuid:
-                  type: string
-                  example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
                 store_id:
                   type: integer
                   example: 1
@@ -160,7 +165,6 @@ paths:
                     type: string
                     example: "Invalid reservation data"
 
-  /users/{uuid}/reservations:
     get:
       summary: ユーザーの予約状況を確認
       description: 特定のユーザーが行った予約を取得します
