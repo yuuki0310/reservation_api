@@ -34,7 +34,7 @@ const app = Vue.createApp({
     async getStoreReservations() {
       try {
         const response = await fetch(
-          `https://1bmxqtjdfk.execute-api.ap-northeast-1.amazonaws.com/stores/${this.storeId}/reservations?year=${this.year}&month=${this.month}`
+          `https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com/stores/${this.storeId}/reservations?year=${this.year}&month=${this.month}`
         );
         if (!response.ok)
           throw new Error("店舗の予約状況を取得できませんでした");
@@ -46,7 +46,7 @@ const app = Vue.createApp({
     async getUserReservations() {
       try {
         const response = await fetch(
-          `https://1bmxqtjdfk.execute-api.ap-northeast-1.amazonaws.com/users/${this.userUuid}/reservations`
+          `https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com/users/${this.userUuid}/reservations`
         );
         if (!response.ok)
           throw new Error("ユーザーの予約状況を取得できませんでした");
@@ -75,7 +75,7 @@ const app = Vue.createApp({
         };
 
         const response = await fetch(
-          `https://1bmxqtjdfk.execute-api.ap-northeast-1.amazonaws.com/reservations`,
+          `https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com/reservations`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
