@@ -33,9 +33,9 @@ jobs:
           platforms: linux/arm64
           provenance: false
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/sauna-api:latest
-          cache-from: type=gha,scope=sauna-api
-          cache-to: type=gha,mode=max,scope=sauna-api
+          tags: ${{ steps.login-ecr.outputs.registry }}/reservation-api:latest
+          cache-from: type=gha,scope=reservation-api
+          cache-to: type=gha,mode=max,scope=reservation-api
       - run: bun install
       - run: bun sls deploy --verbose
         env:
