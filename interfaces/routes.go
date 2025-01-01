@@ -5,15 +5,20 @@ import (
 )
 
 func DefineRoutes(r gin.IRouter) {
-	v1 := r.Group("/")
+	route := r.Group("/")
+
+	route.GET("/", test)
+
+	stores := route.Group("/stores")
 	{
-		v1.GET("/", test)
+		stores.GET("/:storeId/reservations", storeReservations)
 	}
+
+	users := route.Group("/users")
+	users.Use(jwtMiddleware())
 	{
-		v1.GET("/stores/:storeId/reservations", storeReservations)
-	}
-	{
-		v1.POST("/reservations", createReservations)
-		v1.GET("/users/:uuid/reservations", userReservations)
+		users.POST("", createUser)
+		users.POST("/:uuid/reservations", createReservations)
+		users.GET("/:uuid/reservations", userReservations)
 	}
 }

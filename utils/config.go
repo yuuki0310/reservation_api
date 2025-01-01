@@ -13,10 +13,16 @@ var Conf = newConf()
 
 type conf struct {
 	DB databaseConfig
+	Cognito cognitoConfig
 }
 
 type databaseConfig struct {
 	DSN string `toml:"dsn"`
+	
+}
+
+type cognitoConfig struct {
+	JWKSURL string `toml:"jwks_url"`
 }
 
 func newConf() conf {

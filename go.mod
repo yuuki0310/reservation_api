@@ -23,6 +23,7 @@ require (
 	github.com/go-playground/validator/v10 v10.22.1 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/holiday-jp/holiday_jp v1.3.0 // indirect
 	github.com/holiday-jp/holiday_jp-go v0.0.0-20220125203534-53124b4cc19c // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

@@ -1,2 +1,5 @@
 [db]
-dsn="root:password@tcp(mysql:3306)/sauna?charset=utf8mb4&parseTime=True&loc=Local"
+dsn="root:password@tcp(mysql:3306)/reservation_db?charset=utf8mb4&parseTime=True&loc=Local"
+
+[cognito]
+jwks_url="https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_ZigqohuSQ/.well-known/jwks.json"

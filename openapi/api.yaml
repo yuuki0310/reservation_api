@@ -115,6 +115,48 @@ paths:
                   message:
                     type: string
                     example: "No reservations found for this store in the specified month"
+  /users:
+    post:
+      summary: 会員登録
+      description: JWTを使用して認証済みのユーザーを登録します。
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: 電話番号
+                  example: "+81-90-1234-5678"
+                address:
+                  type: string
+                  description: ユーザーの住所
+                  example: "東京都渋谷区"
+      responses:
+        '201':
+          description: ユーザーが正常に登録されました
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully registered"
+        '401':
+          description: JWTが無効、または提供されていない場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized: Invalid or missing token"
 
   /users/{uuid}/reservations:
     post:

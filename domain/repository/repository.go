@@ -13,5 +13,6 @@ type ReservationRepository interface {
 }
 
 type UserRepository interface {
+	CreateUser(*model.User) error
 	GetUserIDByUUID(string) (uint, error)
 }

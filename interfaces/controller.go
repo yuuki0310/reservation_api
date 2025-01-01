@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
@@ -49,9 +50,47 @@ func storeReservations(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+func getUser(c *gin.Context) *model.User {
+	user := &model.User{}
+	claims, ok := c.Get("claims")
+	if !ok {
+		unauthorized(c)
+	}
+	claimsJSON, err := json.Marshal(claims)
+	if err != nil {
+		unauthorized(c)
+	}
+
+	err = json.Unmarshal(claimsJSON, user)
+	if err != nil {
+		unauthorized(c)
+	}
+
+	if user == nil {
+		unauthorized(c)
+	}
+	return user
+}
+
+func unauthorized(c *gin.Context) {
+	c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+	c.Abort()
+}
+
+func createUser(c *gin.Context) {
+	user := getUser(c)
+	userRepository := infrastructure.NewUserRepository()
+	err := userRepository.CreateUser(user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to create user"})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
+}
+
 func createReservations(c *gin.Context) {
+	uuid := c.Param("uuid")
 	var req struct {
-		UUID    string    `json:"uuid" binding:"required"`
 		StoreID int       `json:"store_id" binding:"required"`
 		From    time.Time `json:"from" binding:"required"`
 		To      time.Time `json:"to" binding:"required"`
@@ -77,7 +116,7 @@ func createReservations(c *gin.Context) {
 	}
 
 	userRepository := infrastructure.NewUserRepository()
-	userID, err := userRepository.GetUserIDByUUID(req.UUID)
+	userID, err := userRepository.GetUserIDByUUID(uuid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "ユーザーが見つかりません"})
 		return

@@ -61,6 +61,15 @@ const serverlessConfiguration: AWS = {
         },
         {
           httpApi: {
+            path: "/users",
+            method: "post",
+            authorizer: {
+              name: "cognitoJwtAuthorizer",
+            },
+          },
+        },
+        {
+          httpApi: {
             path: "/users/{uuid}/reservations",
             method: "post",
             authorizer: {
