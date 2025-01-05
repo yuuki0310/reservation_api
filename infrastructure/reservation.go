@@ -18,7 +18,7 @@ func NewReservationRepository() repository.ReservationRepository {
 }
 
 func (r *reservationRepository) GetReservationsByStoreIDAndDateRange(storeID int, startDate, endDate time.Time) (reservations []*model.Reservation, err error) {
-	if err := r.db.Where("store_id = ? AND from_datetime >= ? AND from_datetime <= ?", storeID, startDate, endDate).
+	if err := r.db.Where("store_id = ? AND date >= ? AND date <= ?", storeID, startDate, endDate).
 		Find(&reservations).Error; err != nil {
 		return nil, err
 	}

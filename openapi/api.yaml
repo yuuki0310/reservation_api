@@ -7,7 +7,7 @@ info:
 servers:
   - url: 'http://localhost:8080'
     description: local
-  - url: 'https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com/'
+  - url: 'https://8ib4rtllwk.execute-api.ap-northeast-1.amazonaws.com'
     description: develop
 
 components:
@@ -75,7 +75,7 @@ paths:
                           type: string
                           format: date
                           description: 予約日
-                          example: "2024-11-01T00:00:00+09:00"
+                          example: "2024-11-01"
                         weekday:
                           type: integer
                           description: 日曜日を0とした曜日の数字
@@ -84,27 +84,11 @@ paths:
                           type: boolean
                           description: 祝日かどうか
                           example: false
-                        slots:
-                          type: array
-                          description: 当日の予約スロット情報
-                          items:
-                            type: object
-                            properties:
-                              from:
-                                type: string
-                                format: time
-                                description: 予約開始時間
-                                example: "2024-11-01T16:00:00+09:00"
-                              to:
-                                type: string
-                                format: time
-                                description: 予約終了時間
-                                example: "2024-11-01T17:45:00+09:00"
-                              status:
-                                type: string
-                                description: 予約ステータス（予約可能、予約済みなど）
-                                enum: ["available", "booked"]
-                                example: "available"
+                        status:
+                          type: string
+                          description: 予約ステータス（予約可能、予約済みなど）
+                          enum: ["available", "booked"]
+                          example: "available"
         '404':
           description: 店舗が見つからないか、指定された月の予約が存在しない場合
           content:
@@ -121,21 +105,6 @@ paths:
       description: JWTを使用して認証済みのユーザーを登録します。
       security:
         - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                phone:
-                  type: string
-                  description: 電話番号
-                  example: "+81-90-1234-5678"
-                address:
-                  type: string
-                  description: ユーザーの住所
-                  example: "東京都渋谷区"
       responses:
         '201':
           description: ユーザーが正常に登録されました
@@ -170,6 +139,8 @@ paths:
             type: string
           description: 確認するユーザーのUUID
           example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -180,18 +151,13 @@ paths:
                 store_id:
                   type: integer
                   example: 1
-                from:
+                date:
                   type: string
-                  format: date-time
-                  example: "2024-11-05T14:30:00Z"
-                to:
-                  type: string
-                  format: date-time
-                  example: "2024-11-05T15:30:00Z"
+                  format: date
+                  example: "2024-11-05"
               required:
                 - uuid
-                - from
-                - to
+                - date
       responses:
         '201':
           description: 予約が正常に作成されました
@@ -243,14 +209,6 @@ paths:
                     date:
                       type: string
                       example: "2024/11/05(火)"
-                    from:
-                      type: string
-                      format: date-time
-                      example: "15:00"
-                    to:
-                      type: string
-                      format: date-time
-                      example: "16:00"
         '404':
           description: 指定したユーザーの予約が見つからない場合
           content:

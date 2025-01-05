@@ -35,7 +35,7 @@ func (u reservationUseCase) GetStoreReservations(storeID, year, month int) (*mod
 	reservationMap := make(map[time.Time]struct{}, len(reservations))
 	for _, reservation := range reservations {
 		// DBにJSTで入っているが、UTCで取り出されるため、9時間引く
-		reservationMap[reservation.FromDatetime.In(utils.JST).Add(-9*time.Hour)] = struct{}{}
+		reservationMap[reservation.Date.In(utils.JST).Add(-9*time.Hour)] = struct{}{}
 	}
 
 	storeReservations := &model.StoreReservation{
@@ -45,25 +45,15 @@ func (u reservationUseCase) GetStoreReservations(storeID, year, month int) (*mod
 	}
 	var dailyReservation []model.DailyReservation
 	for date := startDate; date.Before(endDate) || date.Equal(endDate); date = date.AddDate(0, 0, 1) {
-		var reservationSlot []model.ReservationSlot
-		for _, slot := range model.AvailableTimeSlots {
-			from := time.Date(date.Year(), date.Month(), date.Day(), slot.From.Hour(), slot.From.Minute(), 0, 0, utils.JST)
-			to := time.Date(date.Year(), date.Month(), date.Day(), slot.To.Hour(), slot.To.Minute(), 0, 0, utils.JST)
-			status := "available"
-			if _, ok := reservationMap[from]; ok {
-				status = "booked"
-			}
-			reservationSlot = append(reservationSlot, model.ReservationSlot{
-				From:   from,
-				To:     to,
-				Status: status,
-			})
+		var status = "available"
+		if _, ok := reservationMap[date]; ok {
+			status = "booked"
 		}
 		dailyReservation = append(dailyReservation, model.DailyReservation{
 			Date:      date,
 			Weekday:   int(date.Weekday()),
 			IsHoliday: holiday.IsHoliday(date),
-			Slots:     reservationSlot,
+			Status:    status,
 		})
 	}
 	storeReservations.Reservations = dailyReservation

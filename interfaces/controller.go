@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -44,6 +45,7 @@ func storeReservations(c *gin.Context) {
 	useCaseRepository := usecase.NewReservationUseCase(reservationRepository)
 	response, err := useCaseRepository.GetStoreReservations(storeID, year, month)
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get store reservations"})
 		return
 	}
@@ -92,26 +94,11 @@ func createReservations(c *gin.Context) {
 	uuid := c.Param("uuid")
 	var req struct {
 		StoreID int       `json:"store_id" binding:"required"`
-		From    time.Time `json:"from" binding:"required"`
-		To      time.Time `json:"to" binding:"required"`
+		Date    time.Time `json:"date" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid reservation data"})
-		return
-	}
-
-	// 予約可能時間帯のチェック
-	isValidTime := false
-	for _, slot := range model.AvailableTimeSlots {
-		if req.From.Hour() == slot.From.Hour() && req.From.Minute() == slot.From.Minute() &&
-			req.To.Hour() == slot.To.Hour() && req.To.Minute() == slot.To.Minute() {
-			isValidTime = true
-			break
-		}
-	}
-	if !isValidTime {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "予約時間が無効です"})
 		return
 	}
 
@@ -123,10 +110,9 @@ func createReservations(c *gin.Context) {
 	}
 
 	reservation := &model.Reservation{
-		UserID:       userID,
-		StoreID:      uint(req.StoreID),
-		FromDatetime: req.From,
-		ToDatetime:   req.To,
+		UserID:  userID,
+		StoreID: uint(req.StoreID),
+		Date:    req.Date,
 	}
 	reservationRepository := infrastructure.NewReservationRepository()
 	err = reservationRepository.CreateReservation(reservation)
@@ -159,9 +145,7 @@ func userReservations(c *gin.Context) {
 	for _, reservation := range reservations {
 		response = append(response, gin.H{
 			"storeId": reservation.StoreID,
-			"date":    reservation.FromDatetime.Format("2006/01/02(月)"),
-			"from":    reservation.FromDatetime.Format("15:04"),
-			"to":      reservation.ToDatetime.Format("15:04"),
+			"date":    reservation.Date.Format("2006/01/02(月)"),
 		})
 	}
 
