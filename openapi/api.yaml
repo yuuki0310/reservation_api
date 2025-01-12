@@ -154,7 +154,7 @@ paths:
                 date:
                   type: string
                   format: date
-                  example: "2024-11-05"
+                  example: "2025-01-22T00:00:00Z"
               required:
                 - uuid
                 - date
