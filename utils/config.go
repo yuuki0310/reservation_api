@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -12,13 +11,12 @@ import (
 var Conf = newConf()
 
 type conf struct {
-	DB databaseConfig
+	DB      databaseConfig
 	Cognito cognitoConfig
 }
 
 type databaseConfig struct {
 	DSN string `toml:"dsn"`
-	
 }
 
 type cognitoConfig struct {
@@ -29,12 +27,6 @@ func newConf() conf {
 	var _conf conf
 	var confPath string
 	env := os.Getenv("ENV")
-
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Error getting working directory: %v\n", err)
-	}
-	fmt.Printf("Current working directory: %s\n", cwd)
 
 	switch env {
 	case "local":
