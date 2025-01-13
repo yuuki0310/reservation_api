@@ -57,7 +57,7 @@ func getUser(c *gin.Context) *model.User {
 
 	user = &model.User{
 		UUID:  uuid,
-		Email: "test",
+		Email: uuid,
 	}
 
 	if user == nil {
