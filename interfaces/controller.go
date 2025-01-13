@@ -1,7 +1,6 @@
 package interfaces
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -54,29 +53,18 @@ func storeReservations(c *gin.Context) {
 
 func getUser(c *gin.Context) *model.User {
 	user := &model.User{}
-	claims, ok := c.Get("claims")
-	if !ok {
-		unauthorized(c)
-	}
-	claimsJSON, err := json.Marshal(claims)
-	if err != nil {
-		unauthorized(c)
-	}
+	uuid := c.Param("uuid")
 
-	err = json.Unmarshal(claimsJSON, user)
-	if err != nil {
-		unauthorized(c)
+	user = &model.User{
+		UUID:  uuid,
+		Email: "test",
 	}
 
 	if user == nil {
-		unauthorized(c)
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		c.Abort()
 	}
 	return user
-}
-
-func unauthorized(c *gin.Context) {
-	c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-	c.Abort()
 }
 
 func createUser(c *gin.Context) {

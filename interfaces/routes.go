@@ -15,9 +15,8 @@ func DefineRoutes(r gin.IRouter) {
 	}
 
 	users := route.Group("/users")
-	users.Use(jwtMiddleware())
 	{
-		users.POST("", createUser)
+		users.POST("/:uuid", createUser)
 		users.POST("/:uuid/reservations", createReservations)
 		users.GET("/:uuid/reservations", userReservations)
 	}
