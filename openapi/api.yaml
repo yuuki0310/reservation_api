@@ -99,10 +99,18 @@ paths:
                   message:
                     type: string
                     example: "No reservations found for this store in the specified month"
-  /users:
+  /users/{uuid}:
     post:
       summary: 会員登録
       description: JWTを使用して認証済みのユーザーを登録します。
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+          description: 確認するユーザーのUUID
+          example: "08a79fce-b475-11ef-95bd-0ed2b352ed43"
       security:
         - BearerAuth: []
       responses:
@@ -154,7 +162,7 @@ paths:
                 date:
                   type: string
                   format: date
-                  example: "2025-01-22T00:00:00Z"
+                  example: "2025-01-22"
               required:
                 - uuid
                 - date
@@ -208,7 +216,7 @@ paths:
                       example: 1
                     date:
                       type: string
-                      example: "2024/11/05(火)"
+                      example: "2024-11-05"
         '404':
           description: 指定したユーザーの予約が見つからない場合
           content:

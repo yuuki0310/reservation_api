@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/yuuki0310/reservation_api/domain/model"
@@ -81,8 +80,8 @@ func createUser(c *gin.Context) {
 func createReservations(c *gin.Context) {
 	uuid := c.Param("uuid")
 	var req struct {
-		StoreID int       `json:"store_id" binding:"required"`
-		Date    time.Time `json:"date" binding:"required"`
+		StoreID int    `json:"store_id" binding:"required"`
+		Date    string `json:"date" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -133,7 +132,7 @@ func userReservations(c *gin.Context) {
 	for _, reservation := range reservations {
 		response = append(response, gin.H{
 			"storeId": reservation.StoreID,
-			"date":    reservation.Date.Format("2006/01/02(月)"),
+			"date":    reservation.Date,
 		})
 	}
 
