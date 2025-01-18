@@ -6,7 +6,6 @@ import (
 	holiday "github.com/holiday-jp/holiday_jp-go"
 	"github.com/yuuki0310/reservation_api/domain/model"
 	"github.com/yuuki0310/reservation_api/domain/repository"
-	"github.com/yuuki0310/reservation_api/utils"
 )
 
 type ReservationUseCase interface {
@@ -24,7 +23,7 @@ func NewReservationUseCase(r repository.ReservationRepository) ReservationUseCas
 }
 
 func (u reservationUseCase) GetStoreReservations(storeID, year, month int) (*model.StoreReservation, error) {
-	startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, utils.JST)
+	startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 	endDate := startDate.AddDate(0, 1, -1)
 
 	reservations, err := u.reservationRepository.GetReservationsByStoreIDAndDateRange(storeID, startDate, endDate)
@@ -32,9 +31,13 @@ func (u reservationUseCase) GetStoreReservations(storeID, year, month int) (*mod
 		return nil, err
 	}
 
-	reservationMap := make(map[string]struct{}, len(reservations))
+	reservationMap := make(map[time.Time]struct{}, len(reservations))
 	for _, reservation := range reservations {
-		reservationMap[reservation.Date] = struct{}{}
+		date, err := time.Parse(time.RFC3339, reservation.Date)
+		if err != nil {
+			return nil, err
+		}
+		reservationMap[date] = struct{}{}
 	}
 
 	storeReservations := &model.StoreReservation{
@@ -44,13 +47,12 @@ func (u reservationUseCase) GetStoreReservations(storeID, year, month int) (*mod
 	}
 	var dailyReservation []model.DailyReservation
 	for date := startDate; date.Before(endDate) || date.Equal(endDate); date = date.AddDate(0, 0, 1) {
-		dateStr := date.Format("2006-01-02")
 		var status = "available"
-		if _, ok := reservationMap[dateStr]; ok {
+		if _, ok := reservationMap[date]; ok {
 			status = "booked"
 		}
 		dailyReservation = append(dailyReservation, model.DailyReservation{
-			Date:      dateStr,
+			Date:      date.Format("2006-01-02"),
 			Weekday:   int(date.Weekday()),
 			IsHoliday: holiday.IsHoliday(date),
 			Status:    status,

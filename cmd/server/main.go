@@ -8,11 +8,10 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/yuuki0310/reservation_api/infrastructure/mysql"
 	"github.com/yuuki0310/reservation_api/interfaces"
-	"github.com/yuuki0310/reservation_api/utils"
 )
 
 var ginLambda *ginadapter.GinLambdaV2
@@ -20,9 +19,6 @@ var ginLambda *ginadapter.GinLambdaV2
 func init() {
 	log.Printf("Gin cold start")
 	mysql.InitDatabase()
-	if err := utils.InitTimezone(); err != nil {
-		log.Fatalf("Failed to initialize timezone: %v", err)
-	}
 
 	r := gin.Default()
 	interfaces.DefineRoutes(r)
